@@ -23,7 +23,7 @@ def admin_page():
     st.title("Área Administrativa")
 
     # Opções de cadastro
-    st.subheader("Gerenciar Opções")
+    st.subheader("Gerenciar Opções (Ambientes, Disciplinas, Turmas, Objetivos)")
     tabela = st.selectbox("Selecionar tabela para gerenciar", ["ambientes", "disciplinas", "turmas", "objetivos"])
     options = get_options(tabela)
     st.write("Opções cadastradas:")
@@ -55,7 +55,6 @@ def admin_page():
         st.experimental_rerun()
 
     # Listar feriados
-    # Usaremos get_options para recuperar feriados também, adaptando o db se quiser
     from db import get_connection
     conn = get_connection()
     cur = conn.cursor()
