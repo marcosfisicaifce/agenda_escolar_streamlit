@@ -5,26 +5,33 @@ from dotenv import load_dotenv
 from datetime import date
 
 load_dotenv()
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "1234")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "1234")  # Ajuste se necessário
 
 def admin_page():
+    # Se a variável de sessão não existir, cria
     if 'admin_logged' not in st.session_state:
         st.session_state.admin_logged = False
 
+    # Se não estiver logado, pede senha
     if not st.session_state.admin_logged:
+        st.title("Área Administrativa - Login")
         pwd = st.text_input("Senha de Administrador", type="password")
         if st.button("Entrar"):
             if pwd == ADMIN_PASSWORD:
                 st.session_state.admin_logged = True
+                st.success("Login bem-sucedido!")
+                # Não vamos forçar rerun. O usuário pode simplesmente escolher novamente "Administração" no menu,
+                # ou atualizar a página, que vai mostrar o painel administrativo agora que está logado.
             else:
                 st.error("Senha incorreta!")
         return
     
+    # Se chegou aqui, está logado
     st.title("Área Administrativa")
 
-    # Opções de cadastro
-    st.subheader("Gerenciar Opções (Ambientes, Disciplinas, Turmas, Objetivos)")
-    tabela = st.selectbox("Selecionar tabela para gerenciar", ["ambientes", "disciplinas", "turmas", "objetivos"])
+    # Gerenciar Opções (Ambientes, Disciplinas, Turmas, Objetivos)
+    st.subheader("Gerenciar Opções")
+    tabela = st.selectbox("Selecionar tabela", ["ambientes", "disciplinas", "turmas", "objetivos"])
     options = get_options(tabela)
     st.write("Opções cadastradas:")
     for oid, nome in options:
@@ -35,6 +42,7 @@ def admin_page():
             if st.button("Remover", key=f"remover_{tabela}_{oid}"):
                 delete_option(tabela, oid)
                 st.experimental_rerun()
+
     novo = st.text_input(f"Novo {tabela[:-1]}:")
     if st.button(f"Adicionar {tabela[:-1]}"):
         if novo.strip():
@@ -54,7 +62,6 @@ def admin_page():
         st.success("Feriado adicionado!")
         st.experimental_rerun()
 
-    # Listar feriados
     from db import get_connection
     conn = get_connection()
     cur = conn.cursor()
@@ -73,7 +80,6 @@ def admin_page():
                     st.experimental_rerun()
 
     st.subheader("Agendamentos")
-    # Visualizar todos
     ags = get_all_agendamentos()
     if ags:
         for ag in ags:
@@ -93,7 +99,6 @@ def admin_page():
             st.markdown("---")
     else:
         st.write("Nenhum agendamento encontrado.")
-
 
 def app():
     admin_page()
