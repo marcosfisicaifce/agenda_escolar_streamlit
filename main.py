@@ -5,6 +5,7 @@ init_db()
 
 st.set_page_config(page_title="Agendamentos", layout="wide")
 
+# Navegação principal
 st.sidebar.title("Navegação")
 page = st.sidebar.radio("Ir para:", ["Agendar (Professores)", "Administração"])
 
