@@ -1,20 +1,22 @@
 import streamlit as st
-from db import init_db
+from db import init_db, add_agendamento
 
-# Inicializa o banco de dados
 init_db()
 
-# Configuração da página
-st.set_page_config(page_title="Agendamentos", layout="wide")
+st.title("Exemplo de Agendamento com Airtable")
 
-# Barra lateral de navegação
-st.sidebar.title("Navegação")
-page = st.sidebar.radio("Ir para:", ["Agendar (Professores)", "Administração"])
-
-# Navegação entre as páginas
-if page == "Agendar (Professores)":
-    from pages.teacher import app
-    app()
-elif page == "Administração":
-    from pages.admin import app
-    app()
+if st.button("Criar Agendamento de Teste"):
+    # Exemplo fixo
+    add_agendamento(
+        data="2024-12-10",
+        ambiente_id=None, # Suponha que aqui não há ID ainda, o código cria um
+        horario="1ª aula",
+        professor="Fulano",
+        disciplina_id=None,
+        turma_id=None,
+        objetivo_id=None,
+        disciplina_outro="",
+        turma_outro="",
+        objetivo_outro=""
+    )
+    st.success("Agendamento criado e sincronizado com Airtable!")
