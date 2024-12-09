@@ -3,7 +3,7 @@ import requests
 import datetime
 
 # Variáveis da sua configuração
-AIRTABLE_BASE_ID = "patvIcYO7t9bazNyf.df657dbe559f752b11c8c7db5e98e46f36df373cbe6219868e5da23ef728dbe0"  # Substitua pelo seu base ID do Airtable
+AIRTABLE_BASE_ID = "appy8spIjI876Wzr6"  # Substitua pelo seu base ID do Airtable
 TABLE_NAME = "Agendamentos"
 PERSONAL_ACCESS_TOKEN = "patvIcYO7t9bazNyf.df657dbe559f752b11c8c7db5e98e46f36df373cbe6219868e5da23ef728dbe0"  # Seu PAT
 
