@@ -37,12 +37,18 @@ def app():
         ambiente_escolhido = st.selectbox("Ambiente", ambiente_nomes)
         ambiente_id = [a[0] for a in ambientes if a[1] == ambiente_escolhido][0]
 
-        # Horários
-        horarios = ["1ª aula", "2ª aula", "3ª aula", "4ª aula", "5ª aula"]
-        horario_escolhido = st.selectbox("Horário", horarios)
+        # Aulas
+        aulas_opcoes = ["1ª aula", "2ª aula", "3ª aula", "4ª aula", "5ª aula", "6ª aula", "7ª aula", "8ª aula", "9ª aula", "Intervalo do almoço"]
+        aulas_escolhidas = st.multiselect("Aulas", aulas_opcoes)
 
-        # Professor
-        professor = st.text_input("Nome do Professor")
+        # Professor (selecionar de uma lista)
+        profs = get_options("professores")
+        if profs:
+            prof_nomes = [p[1] for p in profs]
+            professor = st.selectbox("Professor", prof_nomes)
+        else:
+            # Caso não haja professores cadastrados, permite digitar
+            professor = st.text_input("Nome do Professor")
 
         # Disciplinas
         disciplinas = get_options("disciplinas")
@@ -84,16 +90,26 @@ def app():
             if not professor.strip():
                 st.error("É necessário inserir o nome do professor.")
                 st.stop()
+            if not aulas_escolhidas:
+                st.error("É necessário escolher pelo menos uma aula.")
+                st.stop()
 
             data_str = data_selecionada.isoformat()
             # Verificar disponibilidade
-            if is_available(data_str, ambiente_id, horario_escolhido):
-                add_agendamento(data_str, ambiente_id, horario_escolhido, professor.strip(), 
-                                disciplina_id, turma_id, objetivo_id, 
-                                disciplina_outro.strip(), turma_outro.strip(), objetivo_outro.strip())
-                st.success("Agendamento realizado com sucesso!")
+            aulas_indisponiveis = []
+            for aula in aulas_escolhidas:
+                if not is_available(data_str, ambiente_id, aula):
+                    aulas_indisponiveis.append(aula)
+
+            if aulas_indisponiveis:
+                st.error(f"As seguintes aulas já estão agendadas: {', '.join(aulas_indisponiveis)}")
             else:
-                st.error("Este horário já está agendado para o ambiente escolhido.")
+                # Todas disponíveis, agenda todas
+                for aula in aulas_escolhidas:
+                    add_agendamento(data_str, ambiente_id, aula, professor.strip(), 
+                                    disciplina_id, turma_id, objetivo_id, 
+                                    disciplina_outro.strip(), turma_outro.strip(), objetivo_outro.strip())
+                st.success("Agendamento realizado com sucesso!")
     else:
         # Visualizar Agendamentos
         st.subheader("Visualizar Agendamentos")
