@@ -7,6 +7,7 @@ def get_connection():
 def init_db():
     conn = get_connection()
     cur = conn.cursor()
+
     # Cria tabelas se não existirem
     cur.execute("""
     CREATE TABLE IF NOT EXISTS ambientes (
@@ -14,15 +15,6 @@ def init_db():
         nome TEXT UNIQUE
     );
     """)
-
-        cur.execute("""
-   CREATE TABLE IF NOT EXISTS professores (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT UNIQUE
-
-    );
-    """)
-
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS disciplinas (
@@ -48,6 +40,14 @@ def init_db():
     cur.execute("""
     CREATE TABLE IF NOT EXISTS feriados (
         data TEXT UNIQUE
+    );
+    """)
+
+    # Caso queira incluir a tabela de professores:
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS professores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT UNIQUE
     );
     """)
 
@@ -125,8 +125,10 @@ def add_agendamento(data, ambiente_id, horario, professor, disciplina_id, turma_
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-    INSERT INTO agendamentos(data, ambiente_id, horario, professor, disciplina_id, turma_id, objetivo_id, disciplina_outro, turma_outro, objetivo_outro, criado_em)
-    VALUES(?,?,?,?,?,?,?,?,?,?,?)
+    INSERT INTO agendamentos(
+        data, ambiente_id, horario, professor, disciplina_id, turma_id, objetivo_id,
+        disciplina_outro, turma_outro, objetivo_outro, criado_em
+    ) VALUES(?,?,?,?,?,?,?,?,?,?,?)
     """, (data, ambiente_id, horario, professor, disciplina_id, turma_id, objetivo_id, disciplina_outro, turma_outro, objetivo_outro, criado_em))
     conn.commit()
     conn.close()
