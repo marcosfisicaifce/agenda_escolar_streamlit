@@ -15,6 +15,15 @@ def init_db():
     );
     """)
 
+        cur.execute("""
+   CREATE TABLE IF NOT EXISTS professores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT UNIQUE
+
+    );
+    """)
+
+
     cur.execute("""
     CREATE TABLE IF NOT EXISTS disciplinas (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
