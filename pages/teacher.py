@@ -5,7 +5,7 @@ from datetime import date, timedelta
 def dias_disponiveis():
     hoje = date.today()
     dias = []
-    for i in range(1,8): # Próximos 7 dias
+    for i in range(0,8): # Próximos 7 dias
         d = hoje + timedelta(days=i)
         # Verificar se não é sábado(5), domingo(6) e nem feriado
         if d.weekday() < 5 and not is_feriado(d.isoformat()):
